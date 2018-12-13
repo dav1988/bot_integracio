@@ -1,0 +1,83 @@
+# -*- coding: utf-8 -*-
+#Els nostres errors seran el nostre fort.
+
+import time
+import telebot
+import sys
+import threading
+import logging
+import sqlite3
+import fitxer
+from telebot import types
+
+API_TOKEN = '697741163:AAEIsJnN3fQehIhrXI_TjgzgwM0jMJlD7FE'
+bot = telebot.TeleBot(API_TOKEN)
+
+
+#configuració amb arxius secundaris
+personal=fitxer.personal()
+avis=fitxer.avis()
+
+
+# handle commands
+
+@bot.message_handler(commands=['help','start','avis','botons'])
+def commandes(message):
+    if message.text == '/start@Caigues_bot' or message.text == '/start':
+	bot.reply_to(message, """ Hola! Sóc un bot en proves, no feu maleses """ )
+    elif message.text == '/help@Caigues_bot' or message.text == '/help':
+	bot.reply_to(message, """ estic en proves, /start per arrancar, /register per a registrar-te""")
+    elif message.text == '/avis@Caigues_bot' or message.text == '/avis':
+	bot.reply_to(message, """Els avis estan feliços donant voltes per la residencia""")
+    elif message.text == '/botons' or message.text == '/botons@Caigues_bot':
+        crea_boto(message)
+    print 'res'
+
+
+
+
+
+@bot.message_handler(func=lambda message: True)
+def echo_message(message):
+    #if message.text == 'vaig' or message.text == 'Vaig':
+    #    user=str(message.from_user.username)
+    #    print user
+    #else:
+    print str(message.text)
+    
+
+
+
+
+@bot.inline_handler(lambda query: query.query == 'text')
+def query_text(inline_query):
+    try:
+        r = types.InlineQueryResultArticle('1', 'Result1', types.InputTextMessageContent('hi'))
+        r2 = types.InlineQueryResultArticle('2', 'Result2', types.InputTextMessageContent('hi'))
+        bot.answer_inline_query(inline_query.id, [r, r2])
+    except Exception as e:
+        print(e)
+
+    
+#Funcions varies
+
+def crea_boto(message):
+    print "no hi ha manera"
+
+
+
+    
+    
+while(1):
+	try:
+		#info_api=bot.get_me() # Comprovar si el bot està disponible
+		print ('- inicialitzant... [OK]')
+		#bot.set_update_listener(echo_message) # Actualizar listener
+		bot.polling(none_stop=True) # bucle de sondeix de missatges
+
+	except Exception as error:
+		print ("Connectant amb el Bot de Telegram -> ERROR")
+		print (error) # <- Error de connexió
+		sys.exit(1)
+    
+
